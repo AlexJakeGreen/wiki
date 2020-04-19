@@ -3,3 +3,16 @@
 
 =wiki= helps to maintain local knowledge base
 
+* Installation
+** package-use
+   Copy wiki.el into ~/.emacs.d/packages/wiki directory and add the next snippet into your config:
+   #+BEGIN_SRC emacs-lisp
+     (use-package wiki
+       :load-path "packages/wiki"
+       :defer t)
+   #+END_SRC
+* Usage
+  - *wiki-open-index*:
+    Open the main index page
+  - *wiki-insert-link*:
+    Insert a link to a page

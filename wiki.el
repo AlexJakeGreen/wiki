@@ -59,7 +59,7 @@
   (insert (wiki--make-link (read-string "Enter link path: "))))
 
 (defun wiki-open-index ()
-  "Open main index page."
+  "Open the main index page."
   (interactive)
   (wiki--open-page "/index"))
 
