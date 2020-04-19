@@ -9,6 +9,7 @@
    #+BEGIN_SRC emacs-lisp
      (use-package wiki
        :load-path "packages/wiki"
+       :commands (wiki-open-index)
        :defer t)
    #+END_SRC
 * Usage
