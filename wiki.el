@@ -58,6 +58,11 @@
   (interactive)
   (insert (wiki--make-link (read-string "Enter link path: "))))
 
+(defun wiki-open-index ()
+  "Open main index page."
+  (interactive)
+  (wiki--open-page "/index"))
+
 (org-link-set-parameters "wiki"
                          :follow 'wiki--open-page)
 
