@@ -4,11 +4,20 @@
 
 (require 'org)
 
-(defvar wiki-dir "~/org/wiki/")
+(defvar wiki-dir "~/org/wiki")
 
 (defun wiki--page-path (name)
-  "Return file path for page NAME."
-  (concat wiki-dir "/" name ".org"))
+  "Return full file path for page NAME."
+  (if (or (string-prefix-p "/" name)
+          (not (string-prefix-p (expand-file-name wiki-dir) (buffer-file-name))))
+      (concat (replace-regexp-in-string "/$" "" wiki-dir)
+              "/"
+              (replace-regexp-in-string "^/" "" name)
+              ".org")
+    (concat (replace-regexp-in-string "\\.org$" "" (buffer-file-name))
+            "/"
+            name
+            ".org")))
 
 (defun wiki--dirname (name)
   "Return dirname for page NAME."
@@ -22,11 +31,10 @@
   "Make a link from page NAME."
   (format "[[wiki:%s][%s]]"
           name
-          (replace-regexp-in-string ".+/\\([^/]+\\)$" "\\1" name)))
+          (replace-regexp-in-string ".*/\\([^/]+\\)$" "\\1" name)))
 
-(defun wiki-open (name)
+(defun wiki--open-page (name)
   "Open wiki page NAME."
-  (interactive)
   (if (wiki--page-exists name)
       (find-file (wiki--page-path name))
     (progn
@@ -39,8 +47,8 @@
                        "#+TIMESTAMP: %s\n"
                        "#+STARTUP:  content\n"
                        "\n\n"
-                       "- [[wiki:index][Index Page]]\n\n")
-                      name
+                       "- [[wiki:/index][Index Page]]\n\n")
+                      (replace-regexp-in-string ".*/\\([^/]+\\)$" "\\1" name)
                       (current-time-string)))
       (save-buffer)
       )))
@@ -50,12 +58,8 @@
   (interactive)
   (insert (wiki--make-link (read-string "Enter link path: "))))
 
-(defun wiki--link-follow (path)
-  "Follow a link with PATH."
-  (wiki-open path))
-
 (org-link-set-parameters "wiki"
-                         :follow 'wiki-open)
+                         :follow 'wiki--open-page)
 
 (provide 'wiki)
 ;;; wiki.el ends here
